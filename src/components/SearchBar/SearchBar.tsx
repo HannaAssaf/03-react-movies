@@ -1,6 +1,8 @@
 import styles from "./SearchBar.module.css";
 
-interface SearchBarProps {}
+interface SearchBarProps {
+  onSubmit: (topic: string) => void;
+}
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
   return (
