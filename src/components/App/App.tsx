@@ -6,12 +6,14 @@ import SearchBar from "../SearchBar/SearchBar";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import MovieModal from "../MovieModal/MovieModal";
 import "./App.module.css";
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<Movie | null>(null);
 
   const handleSubmit = async (searchTopic: string) => {
     try {
@@ -31,8 +33,10 @@ function App() {
   };
 
   const handleSelect = (movie: Movie) => {
-    console.log("Movie:", movie);
+    setIsModalOpen(movie);
   };
+  const handleClose = () => setIsModalOpen(null);
+
   return (
     <>
       <Toaster />
@@ -42,6 +46,7 @@ function App() {
       {!isLoading && !isError && (
         <MovieGrid movies={movies} onSelect={handleSelect} />
       )}
+      {isModalOpen && <MovieModal movie={isModalOpen} onClose={handleClose} />}
     </>
   );
 }
