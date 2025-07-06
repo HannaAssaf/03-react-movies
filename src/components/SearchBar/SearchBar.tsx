@@ -1,10 +1,14 @@
 import styles from "./SearchBar.module.css";
 
 interface SearchBarProps {
-  onSubmit: (topic: string) => void;
+  onSubmit: (query: string) => void;
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
+  const handleSearch = (formData: FormData) => {
+    const query = formData.get("query") as string;
+    onSubmit(query);
+  };
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -16,7 +20,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
         >
           Powered by TMDB
         </a>
-        <form className={styles.form}>
+        <form className={styles.form} action={handleSearch}>
           <input
             className={styles.input}
             type="text"
