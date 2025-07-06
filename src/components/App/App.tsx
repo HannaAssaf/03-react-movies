@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Movie } from "../../types/movie";
 import { fetchMovies } from "../../services/movieService";
+import { Toaster, toast } from "react-hot-toast";
 import SearchBar from "../SearchBar/SearchBar";
 import MovieGrid from "../MovieGrid/MovieGrid";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import "./App.module.css";
 
 function App() {
@@ -14,7 +17,11 @@ function App() {
     try {
       setIsError(false);
       setIsLoading(true);
+      setMovies([]);
       const newMovies = await fetchMovies(searchTopic);
+      if (newMovies.length === 0) {
+        toast.error("No movies found for your request.");
+      }
       setMovies(newMovies);
     } catch (error) {
       setIsError(true);
@@ -28,10 +35,13 @@ function App() {
   };
   return (
     <>
+      <Toaster />
       <SearchBar onSubmit={handleSubmit} />
-      {isLoading && <strong>Loading movies...</strong>}
-      {isError && <strong>Whoops, that's an error!!!</strong>}
-      <MovieGrid movies={movies} onSelect={handleSelect} />
+      {isLoading && <Loader />}
+      {isError && <ErrorMessage />}
+      {!isLoading && !isError && (
+        <MovieGrid movies={movies} onSelect={handleSelect} />
+      )}
     </>
   );
 }
